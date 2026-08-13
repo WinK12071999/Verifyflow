@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup required — VerifyFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="login-page">
+  <main class="container">
+    <section class="auth-panel">
+      <div class="auth-card">
+        <p class="eyebrow">Setup incomplete</p>
+        <h1>VerifyFlow needs configuration</h1>
+        <p class="lead">{{ error }}</p>
+        <ol class="setup-steps">
+          <li>Copy <code>.env.example</code> to <code>.env</code></li>
+          <li>Set <code>SECRET_KEY</code>, <code>ADMIN_EMAIL</code>, and <code>ADMIN_PASSWORD</code></li>
+          <li>Restart the app</li>
+        </ol>
+        <p class="notice">Do not use a short or shared default password. Choose a strong unique password.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — VerifyFlow{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Document</p>
+    <h1>{{ title }}</h1>
+    <p class="lead">For {{ contractor.company_name }}. Upload PDF or image files up to 10 MB.</p>
+  </div>
+  <a class="btn" href="{{ url_for('contractor_detail', public_id=contractor.public_id) }}">Back</a>
+</section>
+
+<section class="panel form-panel">
+  <p class="notice">
+    AI extraction does not prove that the document is authentic or that the insurance coverage is sufficient.
+    OCR is not included yet for scanned PDFs or images — enter details manually when text cannot be read.
+  </p>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="category">{{ form.category.label.text }}</label>
+        {{ form.category(id="category") }}
+      </div>
+      <div class="field">
+        <label for="document_type">{{ form.document_type.label.text }}</label>
+        {{ form.document_type(id="document_type", list="document-type-list") }}
+        <datalist id="document-type-list">
+          {% for suggestion in document_type_suggestions %}
+          <option value="{{ suggestion }}"></option>
+          {% endfor %}
+        </datalist>
+        {% for error in form.document_type.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="field">
+        <label for="issuer">{{ form.issuer.label.text }}</label>
+        {{ form.issuer(id="issuer") }}
+      </div>
+      <div class="field">
+        <label for="policy_number">{{ form.policy_number.label.text }}</label>
+        {{ form.policy_number(id="policy_number") }}
+      </div>
+      <div class="field">
+        <label for="coverage_amount">{{ form.coverage_amount.label.text }}</label>
+        {{ form.coverage_amount(id="coverage_amount") }}
+        {% for error in form.coverage_amount.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="field">
+        <label for="currency">{{ form.currency.label.text }}</label>
+        {{ form.currency(id="currency") }}
+      </div>
+      <div class="field">
+        <label for="issued_date">{{ form.issued_date.label.text }}</label>
+        {{ form.issued_date(id="issued_date") }}
+      </div>
+      <div class="field">
+        <label for="expiry_date">{{ form.expiry_date.label.text }}</label>
+        {{ form.expiry_date(id="expiry_date") }}
+        {% for error in form.expiry_date.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="field">
+        <label for="verification_status">{{ form.verification_status.label.text }}</label>
+        {{ form.verification_status(id="verification_status") }}
+      </div>
+      <div class="field">
+        <label for="file">{{ form.file.label.text }}{% if is_new %} (required){% else %} (optional replace){% endif %}</label>
+        {{ form.file(id="file") }}
+        {% for error in form.file.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        {% if not is_new and document and document.original_filename %}
+        <p class="hint">Current file: {{ document.original_filename }}</p>
+        {% endif %}
+      </div>
+      <div class="field field-full">
+        <label for="notes">{{ form.notes.label.text }}</label>
+        {{ form.notes(id="notes", rows="4") }}
+      </div>
+    </div>
+
+    <div class="form-actions">
+      {{ form.submit(class_="btn btn-primary") }}
+    </div>
+  </form>
+</section>
+{% endblock %}

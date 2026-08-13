@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — VerifyFlow{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Overview</p>
+    <h1>Dashboard</h1>
+    <p class="lead">Track active subcontractors and document expiry at a glance.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('contractor_new') }}">Add subcontractor</a>
+</section>
+
+<section class="stat-grid" aria-label="Summary statistics">
+  <article class="stat-card">
+    <h2>Active subcontractors</h2>
+    <p class="stat-number">{{ contractors_active }}</p>
+  </article>
+  <article class="stat-card">
+    <h2>Valid documents</h2>
+    <p class="stat-number text-valid">{{ valid_count }}</p>
+  </article>
+  <article class="stat-card">
+    <h2>Expiring within 30 days</h2>
+    <p class="stat-number text-soon">{{ soon_count }}</p>
+  </article>
+  <article class="stat-card">
+    <h2>Expired documents</h2>
+    <p class="stat-number text-expired">{{ expired_count }}</p>
+  </article>
+</section>
+
+<div class="two-col">
+  <section class="panel">
+    <h2>Next upcoming expirations</h2>
+    {% if upcoming %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Subcontractor</th>
+            <th>Document</th>
+            <th>Expiry</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in upcoming %}
+          <tr>
+            <td><a href="{{ url_for('contractor_detail', public_id=doc.contractor.public_id) }}">{{ doc.contractor.company_name }}</a></td>
+            <td>{{ doc.document_type }}</td>
+            <td>{{ doc.expiry_date }}</td>
+            <td><span class="badge {{ doc.expiry_status()|expiry_badge_class }}">{{ doc.expiry_status() }} · {{ doc.days_remaining()|days_label }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="empty">No upcoming expirations yet.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Recent document uploads</h2>
+    {% if recent %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Subcontractor</th>
+            <th>Document</th>
+            <th>Uploaded</th>
+            <th>Verification</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in recent %}
+          <tr>
+            <td><a href="{{ url_for('contractor_detail', public_id=doc.contractor.public_id) }}">{{ doc.contractor.company_name }}</a></td>
+            <td>{{ doc.document_type }}</td>
+            <td>{{ doc.date_uploaded.strftime('%Y-%m-%d') }}</td>
+            <td>{{ doc.verification_status }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="empty">No documents uploaded yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

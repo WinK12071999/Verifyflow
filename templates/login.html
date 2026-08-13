@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Sign in — VerifyFlow{% endblock %}
+{% block body_class %}login-page{% endblock %}
+{% block content %}
+<section class="auth-shell" aria-label="Sign in">
+  <div class="auth-copy">
+    <p class="eyebrow" style="color:#5eead4;">Compliance document tracker</p>
+    <h1 class="brand-login">VerifyFlow</h1>
+    <p class="lead">Keep subcontractor insurance current. Track expiry dates, send reminders, and review documents before coverage lapses.</p>
+    <ul class="auth-points">
+      <li>Watch valid, expiring, and expired certificates in one place</li>
+      <li>Store insurance files with clear verification status</li>
+      <li>Remind subcontractors before renewal deadlines</li>
+    </ul>
+  </div>
+
+  <div class="auth-panel">
+    <div class="auth-card">
+      <p class="eyebrow">Administrator access</p>
+      <h1>Sign in</h1>
+      <p class="lead">Use your VerifyFlow admin email and password.</p>
+
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="field">
+          <label for="email">{{ form.email.label.text }}</label>
+          {{ form.email(id="email", autocomplete="username") }}
+          {% for error in form.email.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="field">
+          <label for="password">{{ form.password.label.text }}</label>
+          {{ form.password(id="password", autocomplete="current-password") }}
+          {% for error in form.password.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        </div>
+        {{ form.submit(class_="btn btn-primary") }}
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}VerifyFlow{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="{% block body_class %}is-auth{% endblock %}">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  {% if current_user.is_authenticated %}
+  <header class="topnav">
+    <div class="topnav-inner">
+      <a class="brand" href="{{ url_for('dashboard') }}">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        VerifyFlow
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('contractors') }}">Subcontractors</a>
+        <a href="{{ url_for('reports') }}">Reports</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+      </nav>
+    </div>
+  </header>
+  {% endif %}
+
+  <main id="main-content" class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash-list" role="status">
+          {% for category, message in messages %}
+            <li class="flash flash-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>MVP notice:</strong> VerifyFlow is a learning/testing tool. It is not legal advice and not an insurance-verification authority. A human must verify insurance details. Local SQLite and local uploads are not suitable for production.</p>
+    </div>
+  </footer>
+</body>
+</html>

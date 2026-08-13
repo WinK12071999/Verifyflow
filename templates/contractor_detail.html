@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}{{ contractor.company_name }} — VerifyFlow{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Subcontractor record</p>
+    <h1>{{ contractor.company_name }}</h1>
+    <p class="lead">{{ contractor.contact_name }} · {{ contractor.email }}</p>
+  </div>
+  <div class="header-actions">
+    <a class="btn" href="{{ url_for('contractor_edit', public_id=contractor.public_id) }}">Edit</a>
+    <a class="btn btn-primary" href="{{ url_for('document_new', contractor_id=contractor.public_id) }}">Add document</a>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Subcontractor details</h2>
+  <dl class="detail-grid">
+    <div><dt>Phone</dt><dd>{{ contractor.phone or "—" }}</dd></div>
+    <div><dt>Trade or service</dt><dd>{{ contractor.trade_or_service or "—" }}</dd></div>
+    <div><dt>Government vendor number</dt><dd>{{ contractor.government_vendor_number or "—" }}</dd></div>
+    <div><dt>Status</dt><dd>{% if contractor.is_active %}<span class="badge badge-valid">Active</span>{% else %}<span class="badge badge-muted">Inactive</span>{% endif %}</dd></div>
+    <div><dt>Date created</dt><dd>{{ contractor.created_at.strftime('%Y-%m-%d') }}</dd></div>
+    <div class="field-full"><dt>Notes</dt><dd>{{ contractor.notes or "—" }}</dd></div>
+  </dl>
+</section>
+
+<section class="panel">
+  <div class="panel-header">
+    <h2>Compliance documents</h2>
+  </div>
+  <p class="notice">
+    AI extraction does not prove that the document is authentic or that the insurance coverage is sufficient.
+    A human must verify details before relying on them.
+  </p>
+  {% if documents %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Type</th>
+          <th>Policy #</th>
+          <th>Expiry</th>
+          <th>Status</th>
+          <th>Verification</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in documents %}
+        <tr>
+          <td>{{ doc.category }}</td>
+          <td>{{ doc.document_type }}</td>
+          <td>{{ doc.policy_number or "—" }}</td>
+          <td>{{ doc.expiry_date }}</td>
+          <td><span class="badge {{ doc.expiry_status()|expiry_badge_class }}">{{ doc.expiry_status() }} · {{ doc.days_remaining()|days_label }}</span></td>
+          <td>{{ doc.verification_status }}</td>
+          <td class="actions">
+            {% if doc.stored_filename %}
+            <a class="btn btn-small" href="{{ url_for('document_download', public_id=doc.public_id) }}">Download</a>
+            {% endif %}
+            <a class="btn btn-small" href="{{ url_for('document_edit', public_id=doc.public_id) }}">Edit</a>
+            <form method="post" action="{{ url_for('document_delete', public_id=doc.public_id) }}" class="inline-form" onsubmit="return confirm('Delete this document? This cannot be undone.');">
+              {{ delete_form.hidden_tag() }}
+              <button type="submit" class="btn btn-small btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">No documents yet for this subcontractor.</p>
+  {% endif %}
+</section>
+
+<section class="panel danger-zone">
+  <h2>Delete subcontractor</h2>
+  <p>This permanently removes the subcontractor and all of their documents.</p>
+  <form method="post" action="{{ url_for('contractor_delete', public_id=contractor.public_id) }}" onsubmit="return confirm('Delete this subcontractor and all related documents?');">
+    {{ delete_form.hidden_tag() }}
+    <button type="submit" class="btn btn-danger">Delete subcontractor</button>
+  </form>
+</section>
+{% endblock %}

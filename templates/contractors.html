@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Subcontractors — VerifyFlow{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Directory</p>
+    <h1>Subcontractors</h1>
+    <p class="lead">Manage the companies that provide insurance and compliance documents.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('contractor_new') }}">Add subcontractor</a>
+</section>
+
+<section class="panel">
+  {% if contractors %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Contact</th>
+          <th>Email</th>
+          <th>Trade</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in contractors %}
+        <tr>
+          <td><a href="{{ url_for('contractor_detail', public_id=c.public_id) }}">{{ c.company_name }}</a></td>
+          <td>{{ c.contact_name }}</td>
+          <td>{{ c.email }}</td>
+          <td>{{ c.trade_or_service or "—" }}</td>
+          <td>{% if c.is_active %}<span class="badge badge-valid">Active</span>{% else %}<span class="badge badge-muted">Inactive</span>{% endif %}</td>
+          <td class="actions">
+            <a class="btn btn-small" href="{{ url_for('contractor_detail', public_id=c.public_id) }}">View</a>
+            <a class="btn btn-small" href="{{ url_for('contractor_edit', public_id=c.public_id) }}">Edit</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">No subcontractors yet. Add your first one to get started.</p>
+  {% endif %}
+</section>
+{% endblock %}

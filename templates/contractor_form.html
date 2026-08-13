@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — VerifyFlow{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Subcontractor</p>
+    <h1>{{ title }}</h1>
+    <p class="lead">Enter the subcontractor’s contact and business details.</p>
+  </div>
+  <a class="btn" href="{{ url_for('contractors') }}">Back to list</a>
+</section>
+
+<section class="panel form-panel">
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="company_name">{{ form.company_name.label.text }}</label>
+        {{ form.company_name(id="company_name") }}
+        {% for error in form.company_name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="field">
+        <label for="contact_name">{{ form.contact_name.label.text }}</label>
+        {{ form.contact_name(id="contact_name") }}
+        {% for error in form.contact_name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="field">
+        <label for="email">{{ form.email.label.text }}</label>
+        {{ form.email(id="email") }}
+        {% for error in form.email.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="field">
+        <label for="phone">{{ form.phone.label.text }}</label>
+        {{ form.phone(id="phone") }}
+        {% for error in form.phone.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="field">
+        <label for="trade_or_service">{{ form.trade_or_service.label.text }}</label>
+        {{ form.trade_or_service(id="trade_or_service") }}
+      </div>
+      <div class="field">
+        <label for="government_vendor_number">{{ form.government_vendor_number.label.text }}</label>
+        {{ form.government_vendor_number(id="government_vendor_number") }}
+      </div>
+      <div class="field field-full">
+        <label for="notes">{{ form.notes.label.text }}</label>
+        {{ form.notes(id="notes", rows="4") }}
+      </div>
+      <div class="field field-checkbox">
+        {{ form.is_active(id="is_active") }}
+        <label for="is_active">{{ form.is_active.label.text }}</label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      {{ form.submit(class_="btn btn-primary") }}
+    </div>
+  </form>
+</section>
+{% endblock %}
