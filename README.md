@@ -260,6 +260,35 @@ Images and scanned PDFs without text are **not** read automatically. OCR is not 
 
 ---
 
+## Deploy a lasting demo on Render
+
+Use Render when the client needs a link that works even if your laptop is closed. **Do not use Vercel** for this Flask app.
+
+1. Push this project to GitHub (do **not** commit `.env`).
+2. Sign up at [https://render.com](https://render.com) with GitHub.
+3. **New → Web Service** → connect your VerifyFlow repo.
+4. Settings:
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `flask --app app db upgrade && flask --app app init-db && gunicorn app:app --bind 0.0.0.0:$PORT`
+   - **Plan:** Free
+5. Add Environment Variables:
+
+| Key | Value |
+|-----|--------|
+| `SECRET_KEY` | long random string (or let Render generate one) |
+| `ADMIN_EMAIL` | e.g. `admin@example.com` |
+| `ADMIN_PASSWORD` | strong password, 8+ characters |
+| `ORGANIZATION_NAME` | `VerifyFlow` |
+| `DATABASE_URL` | `sqlite:///compliance.db` |
+| `APP_BASE_URL` | your Render URL after first deploy, e.g. `https://verifyflow.onrender.com` |
+
+6. Deploy, open the Render URL, sign in with the admin email/password you set.
+7. Free tier may sleep after idle; the first visit can take 30–60 seconds.
+
+SQLite and local uploads on Render are **demo-only**. Data can reset when the service restarts.
+
+---
+
 ## Common errors and how to fix them
 
 | Problem | Likely fix |
